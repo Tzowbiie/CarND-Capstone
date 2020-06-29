@@ -83,15 +83,7 @@ class WaypointUpdater(object):
             closest_idx = (closest_idx + 1) % len(self.waypoints_2d)
             
         return closest_idx
-        """   
-    def publish_waypoints(self, closest_idx):
-        if not self.waypoints_tree:
-            return
-        lane = Lane()
-        lane.header = self.base_waypoints.header
-        lane.waypoints = self.base_waypoints.waypoints[closest_idx:closest_idx + LOOKAHEAD_WPS]
-        self.final_waypoints_pub.publish(lane)
-        """
+        
     def publish_waypoints(self,closest_waypoint_idx):
         if not self.waypoints_tree:
             return
@@ -100,28 +92,19 @@ class WaypointUpdater(object):
         lane.header = self.base_waypoints.header
         base_waypoints = self.base_waypoints.waypoints[closest_waypoint_idx: closest_waypoint_idx + LOOKAHEAD_WPS]
         
+        #print('Stopline ',self.stopline_wp_idx)
+        # if red stopligh is very far away, use the stanard waypoints to follow
         if ((self.stopline_wp_idx == -1) or (self.stopline_wp_idx >= closest_waypoint_idx  +LOOKAHEAD_WPS)) :
             lane.waypoints = base_waypoints
+        # if red light is coming closer, use deceleration waypoints
         else :
             lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_waypoint_idx)
         
         self.final_waypoints_pub.publish(lane)
         
-    def generate_lane(self):
-        lane = Lane()
-        closest_idx = self.get_closest_waypoint_idx()
-        farthest_idx = closest_idx + LOOKAHEAD_WPS
-        base_waypoints = self.base_lane.waypoints[closest_idx:farthest_idx]
-        
-        print('Stopline ',self.stopline_wp_idx)
-        
-        if self.stopline_wp_idx == -1 or (self.stopline_wp_idx >=farthest_idx):
-            lane.waypoints =  base_waypoints
-        else:
-            lane.waypoints = self.decelerate_waypoints(base_waypoints,closest_idx)
-        return lane
     
     def decelerate_waypoints(self, waypoints, closest_idx):
+        # creates a list of waypoints to decelerate the car until the stop line of the red traffic line
         temp = []
         for i, wp in enumerate(waypoints):
 
