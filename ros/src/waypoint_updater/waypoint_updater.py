@@ -48,11 +48,10 @@ class WaypointUpdater(object):
         
         #rospy.spin()
         
-    def loop(self):
-        rate = rospy.Rate(50)
+    def loop(self): # To target a frequency of 50 Hz
+        rate = rospy.Rate(50) 
         while not rospy.is_shutdown():
             if self.pose and self.base_waypoints:
-                #get closest waypoint
                 closest_waypoint_idx = self.get_closest_waypoint_idx()
                 self.publish_waypoints(closest_waypoint_idx)
             rate.sleep()
@@ -78,7 +77,7 @@ class WaypointUpdater(object):
             
         return closest_idx
             
-    def publish_wayoints(self, closest_idx):
+    def publish_waypoints(self, closest_idx):
         lane = Lane()
         lane.header = self.base_waypoints.header
         lane.waypoints = self.base_waypoints.waypoints[closest_idx:closest_idx + LOOKAHEAD_WPS]
