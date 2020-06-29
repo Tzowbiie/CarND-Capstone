@@ -23,7 +23,7 @@ as well as to verify your TL classifier.
 TODO (for Yousuf and Aaron): Stopline location for each traffic light.
 '''
 
-LOOKAHEAD_WPS = 200 # Number of waypoints we will publish. You can change this number
+LOOKAHEAD_WPS = 80 # Number of waypoints we will publish. You can change this number
 
 
 class WaypointUpdater(object):
@@ -42,7 +42,7 @@ class WaypointUpdater(object):
         self.pose = None
         self.base_waypoints = None
         self.waypoints_2d = None
-        self.waypoint_tree = None
+        self.waypoints_tree = None
         
         self.loop()
         
@@ -56,10 +56,14 @@ class WaypointUpdater(object):
                 self.publish_waypoints(closest_waypoint_idx)
             rate.sleep()
     
-    def get_closest_waypoint_id(self):
+    def get_closest_waypoint_idx(self):
+        
+        if not self.waypoints_tree:
+            return
+        
         x = self.pose.pose.position.x
         y = self.pose.pose.position.y
-        closest_idx = self.waypoint_tree.query([x,y],1)[1]
+        closest_idx = self.waypoints_tree.query([x, y],1)[1]
         
         #check if closest waypoint is ahead or behind car
         closest_coord = self.waypoints_2d[closest_idx]
@@ -78,6 +82,8 @@ class WaypointUpdater(object):
         return closest_idx
             
     def publish_waypoints(self, closest_idx):
+        if not self.waypoints_tree:
+            return
         lane = Lane()
         lane.header = self.base_waypoints.header
         lane.waypoints = self.base_waypoints.waypoints[closest_idx:closest_idx + LOOKAHEAD_WPS]
@@ -93,7 +99,7 @@ class WaypointUpdater(object):
         self.base_waypoints = waypoints
         if not self.waypoints_2d:
             self.waypoints_2d = [[waypoint.pose.pose.position.x,waypoint.pose.pose.position.y] for waypoint in waypoints.waypoints]
-            self.waypoint_tree = KDTree(self.waypoints_2d)
+            self.waypoints_tree = KDTree(self.waypoints_2d)
         pass
 
     def traffic_cb(self, msg):
