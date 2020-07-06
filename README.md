@@ -38,7 +38,7 @@ This repository contains the code for the final project of the Udacity Self-Driv
 
 The code consists of a set of implemented ROS (Robot Operating System) Nodes which interact to maneuver CARLA, Udacitys self driving car platform, autonomously around a test track. In particular the project handles three different subsystems of the vehicle: Perception, Planning and Control:
 
-![](/capstone_table.JPG)
+![](/video/capstone_table.JPG)
 
 ### System Architecture
 Among the components showed in the picture above, the team focused on the implementation and integration of the following 3 nodes:
@@ -55,13 +55,13 @@ The model generation scripts can be found at  https://github.com/leoborgnino/tra
 
 The training process was slow and no more than 4k steps were done during a 12hs training period; in the images below we can see that the loss was still decreasing when the training finished so the model can still be improved.
 
-![](/capstone_diagr.png )
-![](/capstone_diagr1.png )
+![](/video/capstone_diagr.png )
+![](/video/capstone_diagr1.png )
 
 After training, several tests were made with random images from the rosbag and then in the simulator with site mode. The images from this tests can be seen below:
-![](/traffic_1.png )
-![](/traffic_2.png )
-![](/traffic_3.png )
+![](/video/traffic_1.png )
+![](/video/traffic_2.png )
+![](/video/traffic_3.png )
 
 
 
@@ -76,7 +76,7 @@ The waypoint_updater was developed by us and it subscribes to the /base_waypoint
 
 In this subsystem, there is a DBW(drive-by-wire) node that is responsible for controlling the vehicle. The dbw node subscribes to /current_velocity, /twist_cmd, and /vehicle/dbw_enabled topics. This node will publish throttle, steering, and brake topics. The steering angle is calculated using a YawController while the throttle is calculated using PID. A low pass filter is used to filter out the velocity’s high frequency noise.
 
-![](/dbw_node.png  )
+![](/video/dbw_node.png  )
 
 DBW was  tested using dbw_test.py, we tested the code against the bag recorded at  https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/files/reference.bag.zip
 Three csv files are produced which we used to process how DBW node is performing on various commands. The files are found in https://github.com/leoborgnino/CarND-Capstone/tree/master/ros/src/twist_controller
