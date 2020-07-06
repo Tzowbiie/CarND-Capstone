@@ -19,7 +19,7 @@ Control: DBW Node
 ### Project video
 
 
-![](/video/video/traffic lights.gif)
+![](/video/traffic lights.gif)
 
 Team members
 * Hugo Trinidad - TL : hugot305@aol.com
